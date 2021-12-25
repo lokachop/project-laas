@@ -25,24 +25,32 @@ local pointTypes = {
 
 
 LAAS.Util = LAAS.Util or {}
+-- init basic config
+LAAS.Util.SetConfigVar("CameraPathDebugIterations", 2)
+LAAS.Util.SetConfigVar("DrawCamPoints", true)
 
-LAAS.Util.SetConfigVar("CameraPathDebugIterations", 4)
 
-function LAAS.Util.DrawCameraPointDebug()
+function LAAS.Util.DrawCameraPoints()
 	for k, v in pairs(LAAS.CameraPoints) do
 		local col = HSVToColor((k / #LAAS.CameraPoints) * 360, 1, 1)
 		local colb = HSVToColor((k / #LAAS.CameraPoints) * 360, 0.4, 1)
 
-		debugoverlay.Cross(v.pos, 2, FrameTime() * 2, col) -- i know debugoverlay is slow and dumb and stupid but its meant for debug
-		debugoverlay.Line(v.pos, v.pos + v.dir * 8, FrameTime() * 2, colb)
+		local vec = Vector(4, 2, 2)
+		local vec2 = Vector(0.3, 1.4, 1.4)
+		local ang = (v.pos - (v.pos + v.dir)):Angle()
+
+		render.DrawWireframeBox(v.pos, ang, vec, -vec, col, true)
+
+		local transl = LocalToWorld(Vector(-4.2, 0, 0), Angle(0, 0, 0), v.pos, ang)
+		render.DrawWireframeBox(transl, ang, vec2, -vec2, col, true) -- boxes are probs more expensive due to all the localtoworld stuff but they look nicer
 	end
 end
 
-function LAAS.Util.DrawCameraPathDebug()
-	local itr = LAAS.Util.GetConfigVar("CameraPathDebugIterations", 4) * #LAAS.CameraPoints
+function LAAS.Util.DrawCameraPath()
+	local itr = LAAS.Util.GetConfigVar("CameraPathDebugIterations", 4) * (#LAAS.CameraPoints) -- calculate iterations based on # of points and user-set ipp
 
 
-	for i = 0, itr do -- 64 iterations of path
+	for i = 0, itr do
 		local cpp = math.Clamp((i) / itr, 0, 1)
 		local cpp2 = math.Clamp((i + 1) / itr, 0, 1)
 
@@ -50,9 +58,11 @@ function LAAS.Util.DrawCameraPathDebug()
 		local p2 = LAAS.Util.LerpVectorOffCameraPath(cpp2, LAAS.CameraPoints)
 
 		local col = HSVToColor(cpp * 360, 1, 1)
-		debugoverlay.Line(p1, p2, FrameTime() * 2, col)
+		render.DrawLine(p1, p2, col, true)
 	end
 end
+
+
 
 
 function LAAS.Util.PrintToChat(...)
@@ -94,6 +104,14 @@ end)
 
 
 hook.Add("Think", "ThinkLAAS", function()
-	LAAS.Util.DrawCameraPointDebug()
-	LAAS.Util.DrawCameraPathDebug()
+end)
+
+hook.Add("PostDrawOpaqueRenderables", "LAASRenderPathAndPoints", function()
+	if LAAS.Util.GetConfigVar("DrawCamPoints", false) then
+		LAAS.Util.DrawCameraPoints()
+	end
+
+	if LAAS.Util.GetConfigVar("DrawCamPath", false) then
+		LAAS.Util.DrawCameraPath() -- expensive!
+	end
 end)
