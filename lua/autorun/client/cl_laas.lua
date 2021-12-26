@@ -27,7 +27,8 @@ local pointTypes = {
 LAAS.Util = LAAS.Util or {}
 -- init basic config
 LAAS.Util.SetConfigVar("CameraPathDebugIterations", 2)
-LAAS.Util.SetConfigVar("DrawCamPoints", true)
+LAAS.Util.SetConfigVar("DrawCamPoints", 1)
+LAAS.Util.SetConfigVar("DrawCamPath", 0)
 
 
 function LAAS.Util.DrawCameraPoints()
@@ -54,14 +55,32 @@ function LAAS.Util.DrawCameraPath()
 		local cpp = math.Clamp((i) / itr, 0, 1)
 		local cpp2 = math.Clamp((i + 1) / itr, 0, 1)
 
-		local p1 = LAAS.Util.LerpVectorOffCameraPath(cpp, LAAS.CameraPoints)
-		local p2 = LAAS.Util.LerpVectorOffCameraPath(cpp2, LAAS.CameraPoints)
+		local pt = LAAS.Util.LokaPointDataToPosTable(LAAS.CameraPoints)
+
+		local p1 = LAAS.Util.LerpVectorOffCameraPath(cpp, pt)
+		local p2 = LAAS.Util.LerpVectorOffCameraPath(cpp2, pt)
 
 		local col = HSVToColor(cpp * 360, 1, 1)
 		render.DrawLine(p1, p2, col, true)
 	end
 end
 
+
+function LAAS.Util.DrawVisualCameraPath()
+	local itr = LAAS.Util.GetConfigVar("CameraPathDebugIterations", 4) * (#LAAS.CameraPoints) -- calculate iterations based on # of points and user-set ipp
+
+	for i = 0, itr do
+		local cpp = math.Clamp((i) / itr, 0, 1)
+		local cpp2 = math.Clamp((i + 1) / itr, 0, 1)
+
+		local col = HSVToColor(cpp * 360, 1, 1)
+
+		local ptc = LAAS.Util.LokaPointDataToPosTablePlusDir(LAAS.CameraPoints)
+		local p1 = LAAS.Util.LerpVectorOffCameraPath(cpp, ptc)
+		local p2 = LAAS.Util.LerpVectorOffCameraPath(cpp2, ptc)
+		render.DrawLine(p1, p2, col, true)
+	end
+end
 
 
 
@@ -107,11 +126,16 @@ hook.Add("Think", "ThinkLAAS", function()
 end)
 
 hook.Add("PostDrawOpaqueRenderables", "LAASRenderPathAndPoints", function()
-	if LAAS.Util.GetConfigVar("DrawCamPoints", false) then
+	if LAAS.Util.GetConfigVar("DrawCamPoints", 0) then
 		LAAS.Util.DrawCameraPoints()
 	end
 
-	if LAAS.Util.GetConfigVar("DrawCamPath", false) then
+	if GetConVar("laas_renderpath"):GetBool() then
 		LAAS.Util.DrawCameraPath() -- expensive!
+		
+	end
+
+	if GetConVar("laas_rendereyepath"):GetBool() then
+		LAAS.Util.DrawVisualCameraPath() -- expensive!
 	end
 end)

@@ -10,4 +10,18 @@ language.Add("tool.laas_rps.0", "Press LMB to add a point to the path!")
 
 hook.Add("AddToolMenuCategories", "LAASAddToolMenuCategory", function()
 	spawnmenu.AddToolCategory("Main", "LAAS", "Lokachop's Advanced Anim System")
+	spawnmenu.AddToolCategory("Options", "LAAS", "Lokachop's Advanced Anim System")
 end)
+
+hook.Add("PopulateToolMenu", "LAASMakeOptionMenu", function()
+	spawnmenu.AddToolMenuOption("Options", "LAAS", "LAAS_ConfigMenu", "#LAAS Options", "", "", function(dform)
+		dform:ClearControls()
+
+		dform:CheckBox("Draw Camera Path", "laas_renderpath")
+		dform:CheckBox("Draw Camera Target Path", "laas_rendereyepath")
+		dform:Help("LAAS V"..(tostring(LAAS.Version) or "error!")..", by lokachop!")
+	end)
+end)
+
+CreateClientConVar("laas_renderpath", 0, true, false, "Toggles rendering the camera path in LAAS", 0, 1)
+CreateClientConVar("laas_rendereyepath", 0, true, false, "Toggles rendering the visual target path in LAAS", 0, 1)
