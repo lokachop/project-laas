@@ -126,7 +126,7 @@ hook.Add("Think", "ThinkLAAS", function()
 end)
 
 hook.Add("PostDrawOpaqueRenderables", "LAASRenderPathAndPoints", function()
-	if LAAS.Util.GetConfigVar("DrawCamPoints", 0) then
+	if GetConVar("laas_renderpoints"):GetBool() then
 		LAAS.Util.DrawCameraPoints()
 	end
 

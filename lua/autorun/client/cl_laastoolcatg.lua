@@ -17,11 +17,14 @@ hook.Add("PopulateToolMenu", "LAASMakeOptionMenu", function()
 	spawnmenu.AddToolMenuOption("Options", "LAAS", "LAAS_ConfigMenu", "#LAAS Options", "", "", function(dform)
 		dform:ClearControls()
 
+		dform:CheckBox("Draw Camera Points", "laas_renderpoints")
 		dform:CheckBox("Draw Camera Path", "laas_renderpath")
 		dform:CheckBox("Draw Camera Target Path", "laas_rendereyepath")
 		dform:Help("LAAS V"..(tostring(LAAS.Version) or "error!")..", by lokachop!")
 	end)
 end)
 
+
+CreateClientConVar("laas_renderpoints", 1, true, false, "Toggles rendering the camera points in LAAS", 0, 1)
 CreateClientConVar("laas_renderpath", 0, true, false, "Toggles rendering the camera path in LAAS", 0, 1)
 CreateClientConVar("laas_rendereyepath", 0, true, false, "Toggles rendering the visual target path in LAAS", 0, 1)
