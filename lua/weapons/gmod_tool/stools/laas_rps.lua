@@ -42,9 +42,6 @@ function TOOL:Deploy()
 			net.Send(Entity(1))
 		end
 	end
-	for k, v in pairs(self) do
-		print(k, v)
-	end
 	print("deployed")
 end
 
