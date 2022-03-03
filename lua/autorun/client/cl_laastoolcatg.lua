@@ -20,7 +20,7 @@ hook.Add("PopulateToolMenu", "LAASMakeOptionMenu", function()
 		dform:CheckBox("Draw Camera Points", "laas_renderpoints")
 		dform:CheckBox("Draw Camera Path", "laas_renderpath")
 		dform:CheckBox("Draw Camera Target Path", "laas_rendereyepath")
-		dform:Help("LAAS V"..(tostring(LAAS.Version) or "error!")..", by lokachop!")
+		dform:Help("LAAS v" .. LAAS.Util.GetVersionString() .. ", by lokachop!")
 	end)
 end)
 

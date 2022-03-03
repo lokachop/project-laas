@@ -34,7 +34,7 @@ LAAS.Util.SetConfigVar("DrawCamPath", 0)
 function LAAS.Util.DrawCameraPoints()
 	for k, v in pairs(LAAS.CameraPoints) do
 		local col = HSVToColor((k / #LAAS.CameraPoints) * 360, 1, 1)
-		local colb = HSVToColor((k / #LAAS.CameraPoints) * 360, 0.4, 1)
+		--local colb = HSVToColor((k / #LAAS.CameraPoints) * 360, 0.4, 1)
 
 		local vec = Vector(4, 2, 2)
 		local vec2 = Vector(0.3, 1.4, 1.4)
@@ -52,7 +52,7 @@ function LAAS.Util.DrawCameraPath()
 
 
 	for i = 0, itr do
-		local cpp = math.Clamp((i) / itr, 0, 1)
+		local cpp = math.Clamp(i / itr, 0, 1)
 		local cpp2 = math.Clamp((i + 1) / itr, 0, 1)
 
 		local pt = LAAS.Util.LokaPointDataToPosTable(LAAS.CameraPoints)
@@ -70,7 +70,7 @@ function LAAS.Util.DrawVisualCameraPath()
 	local itr = LAAS.Util.GetConfigVar("CameraPathDebugIterations", 4) * (#LAAS.CameraPoints) -- calculate iterations based on # of points and user-set ipp
 
 	for i = 0, itr do
-		local cpp = math.Clamp((i) / itr, 0, 1)
+		local cpp = math.Clamp(i / itr, 0, 1)
 		local cpp2 = math.Clamp((i + 1) / itr, 0, 1)
 
 		local col = HSVToColor(cpp * 360, 1, 1)
@@ -102,7 +102,7 @@ function LAAS.Util.AddDebugPoint()
 		vel = 1,
 		fov = 90,
 		type = 1
-	} 
+	}
 
 	LAAS.CameraPoints[#LAAS.CameraPoints + 1] = pdata
 end
@@ -132,7 +132,6 @@ hook.Add("PostDrawOpaqueRenderables", "LAASRenderPathAndPoints", function()
 
 	if GetConVar("laas_renderpath"):GetBool() then
 		LAAS.Util.DrawCameraPath() -- expensive!
-		
 	end
 
 	if GetConVar("laas_rendereyepath"):GetBool() then

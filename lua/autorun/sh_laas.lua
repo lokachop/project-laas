@@ -36,3 +36,7 @@ end
 function LAAS.Util.GetConfigVar(var, fb)
 	return LAAS.Config[var] or fb
 end
+
+function LAAS.Util.GetVersionString()
+	return tostring(LAAS.Version) or "error!"
+end
