@@ -3,7 +3,10 @@ TOOL.Name = "#tool.laas_rps.name"
 TOOL.AddToMenu = true
 TOOL.LeftClickAutomatic = false
 TOOL.RightClickAutomatic = false
-TOOL.ClientConvar = {}
+TOOL.ClientConVar["speed"] = 1
+TOOL.ClientConVar["type"] = 1
+TOOL.ClientConVar["fov"] = 90
+
 
 if SERVER and game.SinglePlayer() then
 	util.AddNetworkString("LAAS_RPS_Deploy")
@@ -142,11 +145,14 @@ function TOOL:DrawToolScreen(w, h)
 	draw.NoTexture()
 	surface.SetDrawColor(50, 50, 75)
 	surface.DrawRect(0, 0, w, h)
+
 	local xc = CurTime() * 64 % (w + 64 + 32)
 	local yc = h * 0.9 + -math.abs(math.sin(CurTime() * 3.269) * h / 2)
+
 	DrawFilledCircle((self.RenderToolScreenPrevXC or 0) - 32, self.RenderToolScreenPrevYC or 0, 32)
 	surface.SetDrawColor(100, 100, 150, 255)
 	DrawFilledCircle(xc - 32, yc, 32)
+
 	surface.SetDrawColor(115, 115, 150)
 	DrawFilledCircle((xc - 32) - 8, yc - 8, 16)
 
@@ -160,4 +166,8 @@ end
 function TOOL.BuildCPanel(dform)
 	dform:SetName("#tool.laas_rps.name")
 	dform:Help("WIP :/")
+
+	dform:NumSlider("New node FOV", "laas_rps_fov", 10, 170, 1)
+	dform:NumSlider("New node speed", "laas_rps_speed", 0.01, 5, 2)
+	dform:NumSlider("New node type", "laas_rps_type", 1, 1, 0)
 end
