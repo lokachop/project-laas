@@ -26,7 +26,7 @@ local pointTypes = {
 
 LAAS.Util = LAAS.Util or {}
 -- init basic config
-LAAS.Util.SetConfigVar("CameraPathDebugIterations", 2)
+LAAS.Util.SetConfigVar("CameraPathDebugIterations", 1)
 LAAS.Util.SetConfigVar("DrawCamPoints", 1)
 LAAS.Util.SetConfigVar("DrawCamPath", 0)
 
@@ -86,6 +86,22 @@ end
 
 function LAAS.Util.PrintToChat(...)
 	chat.AddText(Color(50, 50, 100), "[LAAS] ", Color(180, 180, 180), ...)
+end
+
+function LAAS.Util.AddPoint(pos, dir, vel, fov, type)
+	local pdata = {
+		pos = pos,
+		dir = dir,
+		vel = vel,
+		fov = fov,
+		type = type
+	}
+	LAAS.CameraPoints[#LAAS.CameraPoints + 1] = pdata
+end
+
+
+function LAAS.Util.RemoveLast()
+	LAAS.CameraPoints[#LAAS.CameraPoints] = nil
 end
 
 

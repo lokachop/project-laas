@@ -32,10 +32,22 @@ end
 
 local function LeftClickToCall()
 	print("Left clicked!")
+	if CLIENT then
+		local pos = LocalPlayer():EyePos()
+		local dir = LocalPlayer():EyeAngles():Forward()
+		local vel = GetConVar("laas_rps_speed"):GetFloat()
+		local fov = GetConVar("laas_rps_fov"):GetFloat()
+		local type = GetConVar("laas_rps_type"):GetInt()
+
+		LAAS.Util.AddPoint(pos, dir, vel, fov, type)
+	end
 end
 
 local function RightClickToCall()
 	print("Right clicked!")
+	if CLIENT then
+		LAAS.Util.RemoveLast()
+	end
 end
 
 
@@ -161,6 +173,8 @@ function TOOL:DrawToolScreen(w, h)
 
 	draw.SimpleText("LAAS v" .. LAAS.Util.GetVersionString(), "Trebuchet18", w, h, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
 	draw.SimpleText("#tool.laas_rps.name", "Trebuchet24", w / 2, 0, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+	draw.SimpleText(#LAAS.CameraPoints .. " points made", "Trebuchet24", w / 2, 64, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end
 
 function TOOL.BuildCPanel(dform)
