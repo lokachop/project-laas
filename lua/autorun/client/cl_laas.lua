@@ -105,32 +105,9 @@ function LAAS.Util.RemoveLast()
 end
 
 
-function LAAS.Util.AddDebugPoint()
-	if not CLIENT then
-		return -- client only!
-	end
-
-	local pos = LocalPlayer():EyePos()
-	local dir = LocalPlayer():EyeAngles():Forward()
-	local pdata = {
-		pos = pos,
-		dir = dir,
-		vel = 1,
-		fov = 90,
-		type = 1
-	}
-
-	LAAS.CameraPoints[#LAAS.CameraPoints + 1] = pdata
-end
-
 function LAAS.Util.DeleteAllPoints()
 	LAAS.CameraPoints = {}
 end
-
-concommand.Add("laas_debug_addpoint", function()
-	LAAS.Util.AddDebugPoint()
-	LAAS.Util.PrintToChat("Added a point!")
-end)
 
 concommand.Add("laas_debug_wipepoints", function()
 	LAAS.Util.DeleteAllPoints()

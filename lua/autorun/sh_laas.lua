@@ -23,7 +23,6 @@ end
 
 
 function LAAS.Util.LerpVectorOffCameraPath(lg, ptbl)
-
 	local tptbl = ptbl or LAAS.Util.LokaPointDataToPosTable(LAAS.CameraPoints)
 
 	return math.BSplinePoint(lg, tptbl, 1)
@@ -39,4 +38,8 @@ end
 
 function LAAS.Util.GetVersionString()
 	return tostring(LAAS.Version) or "error!"
+end
+
+function LAAS.Util.BezQuadratic1P(t, p1, p2, p3)
+	return (1 - t) * ((1 - t) * p1 + t * p2) + t * ((1 - t) * p2 + t * p3)
 end
